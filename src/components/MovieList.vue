@@ -11,7 +11,7 @@
                 :key="movie.id"
             ></movie-item>
         </div>
-        <div class="no-results" v-else-if="movies.length">No Results.</div>
+        <div class="no-results" v-else-if="movies.length">{{noResults}}</div>
         <div class="no-results" v-else>Loading...</div>
     </div>
 </template>
@@ -56,6 +56,13 @@ export default {
                 .filter(movie =>
                     movie.sessions.find(this.sessionPassesTimeFilter)
                 );
+        },
+        noResults() {
+            let times = this.time.join(", ");
+            let genres = this.genre.join(", ");
+            return `No results for ${times}${
+                times.length && genres.length ? ", " : ""
+            } ${genres}.`;
         }
     },
     components: {
