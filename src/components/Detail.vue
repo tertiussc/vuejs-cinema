@@ -1,4 +1,22 @@
 <template>
-    <div class="">Hello World</div>
+    <div id="detail" v-if="movie">
+        <movie-item :movie="movie.movie" :sessions="[]"></movie-item>
+    </div>
 </template>
-
+<script>
+import movieItem from "./MovieItem.vue";
+export default {
+    props: ["movies"],
+    computed: {
+        movie() {
+            let movie = this.movies.find(
+                movie => movie.id === this.$route.params.id
+            );
+            return movie ? movie : null;
+        }
+    },
+    components: {
+        movieItem
+    }
+};
+</script>
