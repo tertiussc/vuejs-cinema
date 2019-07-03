@@ -2,14 +2,17 @@
 <template>
     <div id="movie-list">
         <div class v-if="filteredMovies.length">
-            <movie-item
-                v-for="movie in filteredMovies"
-                :movie="movie.movie"
-                :sessions="movie.sessions"
-                :day="day"
-                :time="time"
-                :key="movie.id"
-            ></movie-item>
+            <movie-item v-for="movie in filteredMovies" :movie="movie.movie" :key="movie.id">
+                <div class="movie-sessions">
+                    <div
+                        class="session-time-wrapper"
+                        v-for="session in filteredSessions(movie.sessions)"
+                        :key="session.id"
+                    >
+                        <div class="session-time">{{formatSessionsTime(session.time)}}</div>
+                    </div>
+                </div>
+            </movie-item>
         </div>
         <div class="no-results" v-else-if="movies.length">{{noResults}}</div>
         <div class="no-results" v-else>Loading...</div>
@@ -23,6 +26,12 @@ import MovieItem from "./MovieItem.vue";
 export default {
     props: ["genre", "time", "movies", "day"],
     methods: {
+        formatSessionsTime(raw) {
+            return this.$moment(raw).format("h:mm A");
+        },
+        filteredSessions(sessions) {
+            return sessions.filter(this.sessionPassesTimeFilter);
+        },
         moviePassesGenreFilter(movie) {
             if (!this.genre.length) {
                 return true;
